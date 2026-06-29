@@ -1,8 +1,8 @@
 const std = @import("std");
 
-const Checker = @import("../global_utils/Checker.zig");
-const IoManager = @import("../global_utils/IoManager.zig");
-const DedupFlags = @import("../global_utils/DedupFlags.zig");
+const checker = @import("../global_utils/checker.zig");
+const IoManager = @import("../global_utils/structs/IoManager.zig");
+const DedupFlags = @import("../global_utils/structs/DedupFlags.zig");
 
 const help = @import("flags/help.zig").help;
 const version = @import("flags/version.zig").version;
@@ -17,18 +17,18 @@ pub fn cli(allocator: std.mem.Allocator, io_manager: *IoManager, args: *std.proc
     };
 
     while (args.next()) |arg| {
-        if (Checker.flagsEqual(arg, &.{ "-h", "--help" })) {
+        if (checker.flagsEqual(arg, &.{ "-h", "--help" })) {
             try help(io_manager);
             return 0;
         }
 
-        if (Checker.flagsEqual(arg, &.{ "-v", "--version" })) {
+        if (checker.flagsEqual(arg, &.{ "-v", "--version" })) {
             try version(io_manager);
             return 0;
         }
 
         // is recurive for default
-        if (Checker.flagsEqual(arg, &.{ "-nr", "--no-recursive" })) {
+        if (checker.flagsEqual(arg, &.{ "-nr", "--no-recursive" })) {
             dedup_flags.recursive = false;
             continue;
         }

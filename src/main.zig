@@ -1,6 +1,6 @@
 const std = @import("std");
 
-const IoManager = @import("global_utils/IoManager.zig");
+const IoManager = @import("global_utils/structs/IoManager.zig");
 
 const dedup = @import("cli/cli.zig");
 
