@@ -4,8 +4,6 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    // We removed the separate "dedup" module definition completely
-
     const exe = b.addExecutable(.{
         .name = "dedup",
         .root_module = b.createModule(.{
@@ -14,6 +12,15 @@ pub fn build(b: *std.Build) void {
             .optimize = optimize,
         }),
     });
+
+    exe.root_module.unwind_tables = .none;
+    exe.root_module.strip = true;
+    exe.link_gc_sections = true;
+    exe.stack_size = 1 * 1024 * 1024;
+
+    if (optimize != .Debug) {
+        exe.lto = .full;
+    }
 
     b.installArtifact(exe);
 
@@ -26,7 +33,6 @@ pub fn build(b: *std.Build) void {
         run_cmd.addArgs(args);
     }
 
-    // Single test runner block for the root application tree
     const exe_tests = b.addTest(.{
         .root_module = exe.root_module,
     });
