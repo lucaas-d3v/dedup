@@ -84,7 +84,13 @@ fn run(allocator: std.mem.Allocator, io_manager: *IoManager, dedup_flags: DedupF
     // clears the last progress line from the terminal so the final table starts off looking clean
     try io_manager.fastPrint(.STDOUT, "\r\x1B[K", .{});
 
-    if (dedup_flags.debug) {
+    if (!dedup_flags.debug) {
+        try io_manager.stdout.print("Sucesso!\n\n", .{});
+        try io_manager.stdout.print("Arquivos processados: {d}.\n", .{manager.unique_map.count()});
+        try io_manager.stdout.print("Arquivos duplicados: {d}.\n", .{manager.dup_map.count()});
+
+        try io_manager.stdout.flush();
+    } else {
         try io_manager.fastPrint(.STDOUT, "==========================\n\tDebug\n\n", .{});
 
         try io_manager.fastPrint(.STDOUT, "--------------------------------------------\n\tRESUMOS [ORIGINAL]\n\n", .{});
